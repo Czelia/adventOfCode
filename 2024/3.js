@@ -6,30 +6,19 @@ let rawInput = fs.readFileSync(filePath, "utf8");
 
 let example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))
 `;
+let regexMul = /mul\((\d+),(\d+)\)/g;
+let multiplesInstructions = rawInput.match(regexMul);
 
-let multiplesInstructions = example.match(/mul\((\d+),(\d+)\)/g);
-
-let multiplesPart1 = multiplesInstructions.map((e) =>
-	e
-		.match(/mul\((\d+),(\d+)\)/)
-		.slice(1)
-		.map((e) => parseInt(e))
-);
-
-let total = 0;
-multiplesPart1.forEach((e) => {
-	total += e[0] * e[1];
-});
-
-// console.log(total);
+let multiplesPart1 = getMultiples(multiplesInstructions);
+console.log("Part 1:", calcTotal(multiplesPart1));
 
 // Part 2
 
 let examplePart2 = `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`;
 
-const regex = /(mul\(\d+,\d+\)|do\(\)|don't\(\))/g;
+let regexMulDoDont = /(mul\(\d+,\d+\)|do\(\)|don't\(\))/g;
 
-let multiplesDoDontInstructions = rawInput.match(regex);
+let multiplesDoDontInstructions = rawInput.match(regexMulDoDont);
 let result = [];
 let closestCommand = "do";
 multiplesDoDontInstructions.forEach((item) => {
@@ -44,15 +33,22 @@ multiplesDoDontInstructions.forEach((item) => {
 	}
 });
 
-let multiplesPart2 = result.map((e) =>
-	e
-		.match(/mul\((\d+),(\d+)\)/)
-		.slice(1)
-		.map((e) => parseInt(e))
-);
-let totalPart2 = 0;
-multiplesPart2.forEach((e) => {
-	totalPart2 += e[0] * e[1];
-});
+let multiplesPart2 = getMultiples(result);
+console.log("Part 2 : " + calcTotal(multiplesPart2));
 
-console.log(totalPart2);
+function getMultiples(array) {
+	return array.map((e) =>
+		e
+			.match(/mul\((\d+),(\d+)\)/)
+			.slice(1)
+			.map((e) => parseInt(e))
+	);
+}
+
+function calcTotal(array) {
+	let total = 0;
+	array.forEach((e) => {
+		total += e[0] * e[1];
+	});
+	return total;
+}
