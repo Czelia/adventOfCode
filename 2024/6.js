@@ -58,7 +58,6 @@ while (leaving === false) {
 			) == -1
 		) {
 			steps.push([currentRow, currentCol]);
-			// console.log(steps);
 		}
 
 		if (currentDirection === "up") {
