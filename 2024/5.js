@@ -37,6 +37,7 @@ const numbersArray = numbersPart.split("\n").map((line) => line.split(","));
 // console.log(pairsArray);
 // console.log(numbersArray);
 let validNumbers = [];
+let inValidNumbers = [];
 for (let index = 0; index < numbersArray.length; index++) {
 	// console.log(numbersArray[index]);
 	let numbersValid = [];
@@ -53,6 +54,11 @@ for (let index = 0; index < numbersArray.length; index++) {
 		);
 		if (isValid) {
 			numbersValid.push(element);
+		} else {
+			// check if array isn't already in invalid numbers
+			if (!inValidNumbers.includes(numbersArray[index])) {
+				inValidNumbers.push(numbersArray[index]);
+			}
 		}
 	});
 	if (numbersValid.length === numbersArray[index].length) {
@@ -60,14 +66,42 @@ for (let index = 0; index < numbersArray.length; index++) {
 	}
 }
 // console.log(validNumbers);
+// console.log("Invalid numbers : ");
 
 let middleElements = validNumbers.map((subArray) => {
 	let middleIndex = Math.floor(subArray.length / 2);
 	return subArray[middleIndex];
 });
 
-// console.log("Middle elements:", middleElements);
 console.log(
 	"Part 1:",
 	middleElements.reduce((acc, curr) => acc + parseInt(curr), 0)
+);
+
+function orderInvalidNumbersByRules(inValidNumbers) {
+	// console.log(inValidNumbers);
+	for (let i = 0; i < inValidNumbers.length; i++) {
+		inValidNumbers[i].sort((a, b) => {
+			// console.log(a, b);
+			let match = pairsArray.find(
+				(pair) => pair.includes(a) && pair.includes(b)
+			);
+			// console.log(match);
+
+			if (match[0].includes(a)) {
+				return -1;
+			} else {
+				return 1;
+			}
+		});
+	}
+}
+orderInvalidNumbersByRules(inValidNumbers);
+let middleElementsPart2 = inValidNumbers.map((subArray) => {
+	let middleIndex = Math.floor(subArray.length / 2);
+	return subArray[middleIndex];
+});
+console.log(
+	"Part 2:",
+	middleElementsPart2.reduce((acc, curr) => acc + parseInt(curr), 0)
 );
